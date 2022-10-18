@@ -31,7 +31,7 @@ export const webviewGenericCspSource = `'self' https://*.${webviewResourceBaseHo
  * we know where to load the resource from (remote or truly local):
  *
  * ```txt
- * ${scheme}+${resource-authority}.vscode-resource.vscode-cdn.net/${path}
+ * ${scheme}.${resource-authority}.vscode-resource.vscode-cdn.net/${path}
  * ```
  *
  * @param resource Uri of the resource to load.
@@ -52,7 +52,7 @@ export function asWebviewUri(resource: URI, remoteInfo?: WebviewRemoteInfo): URI
 
 	return URI.from({
 		scheme: Schemas.https,
-		authority: `${resource.scheme}+${encodeAuthority(resource.authority)}.${webviewRootResourceAuthority}`,
+		authority: `${resource.scheme}.${encodeAuthority(resource.authority)}.${webviewRootResourceAuthority}`,
 		path: resource.path,
 		fragment: resource.fragment,
 		query: resource.query,
@@ -60,6 +60,10 @@ export function asWebviewUri(resource: URI, remoteInfo?: WebviewRemoteInfo): URI
 }
 
 function encodeAuthority(authority: string): string {
+	if (authority === '' || authority === null) {
+		return 'no-authority';
+	}
+
 	return authority.replace(/./g, char => {
 		const code = char.charCodeAt(0);
 		if (

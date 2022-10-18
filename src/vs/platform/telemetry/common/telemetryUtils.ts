@@ -199,7 +199,7 @@ export function cleanRemoteAuthority(remoteAuthority?: string): string {
 	}
 
 	for (const authority of telemetryAllowedAuthorities) {
-		if (remoteAuthority.startsWith(`${authority}+`)) {
+		if (remoteAuthority.startsWith(`${authority}.`)) {
 			return authority;
 		}
 	}

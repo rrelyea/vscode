@@ -162,9 +162,10 @@ sw.addEventListener('fetch', (event) => {
 		switch (event.request.method) {
 			case 'GET':
 			case 'HEAD': {
-				const firstHostSegment = requestUrl.hostname.slice(0, requestUrl.hostname.length - (resourceBaseAuthority.length + 1));
-				const scheme = firstHostSegment.split('+', 1)[0];
-				const authority = firstHostSegment.slice(scheme.length + 1); // may be empty
+				const schemaAndAuthority = requestUrl.hostname.slice(0, requestUrl.hostname.length - (resourceBaseAuthority.length + 1));
+				const scheme = schemaAndAuthority.split('.', 1)[0];
+				const authorityDeclaration = schemaAndAuthority.slice(scheme.length + 1);
+				const authority = authorityDeclaration === 'no-authority' ? '' : authorityDeclaration;
 				return event.respondWith(processResourceRequest(event, {
 					scheme,
 					authority,
